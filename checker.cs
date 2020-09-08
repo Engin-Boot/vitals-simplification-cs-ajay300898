@@ -4,6 +4,66 @@ using System.Diagnostics;
 
 namespace VitalsSimplification
 {
+    public abstract class Alert
+    {
+        public abstract void RaiseAlert(string alertMsg);
+        
+    }
+
+    public class AlertInSMS : Alert
+    {
+        public override void RaiseAlert(string alertMsg)
+        {
+            Console.WriteLine("Alert in SMS: {0}", alertMsg);
+        }
+    }
+    public class AlertInSound : Alert
+    {
+        public override void RaiseAlert(string alertMsg)
+        {
+            Console.WriteLine("Alert in Soound: {0}", alertMsg);
+        }
+    }
+    public class Limits
+    {
+        public int lowLimit;
+        public int highLimit;
+        public Limits(int low,int high)
+        {
+            this.lowLimit = low;
+            this.highLimit = high;
+        }
+
+        public bool IsInRange(int value)
+        {
+            return (value >= lowLimit && value <= highLimit);
+        }
+        public bool IsLessThan(int value)
+        {
+            return value < lowLimit;
+        }
+    }
+    public class VitalInformation
+    {
+        public static Dictionary<string,Limits> vitalInformation = new Dictionary<string,Limits>();
+        static VitalInformation()
+        {
+            vitalInformation.Add("bp", new Limits(70, 150));
+            vitalInformation.Add("spo2", new Limits(90, 100));
+            vitalInformation.Add("respRate", new Limits(30, 95));
+        }
+        public static bool AddNewVitalInfo(string vName,int low,int high)
+        {
+            if (vitalInformation.ContainsKey(vName))
+            {
+                Console.WriteLine("Vital already Exists...!!");
+                return false;
+            }
+            vitalInformation.Add(vName, new Limits(low, high));
+            return true;
+        }
+    }
+    
     public class Vital
     {
         public string vitalName;
